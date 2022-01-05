@@ -18,5 +18,9 @@ Then return the last sample as wind gust speed and wind average speed on the add
 6. In Mapping page, remap the wind average sensor to the new wind average sensor.
 
 
+### appenndix
+Special thanks to TrimbleSoftware (https://github.com/TrimbleSoftware): https://github.com/TrimbleSoftware/mbwbpi
+Topic related on Meteobridge Forum: https://forum.meteohub.de/viewtopic.php?f=56&t=16149
+MeteoBridge: https://www.meteobridge.com/wiki/index.php/Home
  
 
