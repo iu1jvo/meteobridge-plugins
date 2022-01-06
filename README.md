@@ -26,3 +26,9 @@ MeteoBridge: https://www.meteobridge.com/wiki/index.php/Home
 ### Version History
 * v1.0 Compute wind speed average
 * v1.1 Wind speed Average improvement: Speed is computed only on valid data, to cancel the initialization time at script start (10 minutes)
+* v2.0 Compute the following:
+	* Wind speed average in 10m.
+	* Wind direction average in 10m.
+	* wind gust in 10m.
+	
+
