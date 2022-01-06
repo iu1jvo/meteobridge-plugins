@@ -23,4 +23,5 @@ Special thanks to TrimbleSoftware (https://github.com/TrimbleSoftware): https://
 Topic related on Meteobridge Forum: https://forum.meteohub.de/viewtopic.php?f=56&t=16149
 MeteoBridge: https://www.meteobridge.com/wiki/index.php/Home
  
-
+### Version History
+v1.0 Compute wind speed average

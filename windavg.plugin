@@ -1,6 +1,7 @@
 #!/usr/bin/awk -f
 #
-#	windavg.plugin		Meteobridge plugin weatherstation to calculate wind average if nto provided by meteo station
+#--------------------------------------------------------------------------------------------------------------------
+#	windavg.plugin		Meteobridge plugin weatherstation to calculate wind average if not provided by meteo station
 #
 #  Copyright 2022 by IU1JVO [Giuliano Favro] (iu1jvo@gmail.com)
 #
@@ -20,12 +21,17 @@
 #  MA 02110-1301, USA.
 #
 #	Meteobridge user-defined plugin weatherstation to calculate Wind average from
-#	wind speed sensor as a t0 sensor.
+#	prinary wind speed sensor.
 #
 #	Written 05-Jan-2021 by IU1JVO (Giuliano Favro) Ver 1.0 (iu1jvo@gmail.com)
+# 		special thanks to TrimbleSoftware (https://github.com/TrimbleSoftware/mbwbpi)
 #
 # awk lang reference:
 #		http://www.math.utah.edu/docs/info/gawk_toc.html
+#
+# Version history
+#		1.0	-	Compute Only Wind Average
+#
 
 # function definitions
 
