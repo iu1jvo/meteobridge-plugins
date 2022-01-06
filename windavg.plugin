@@ -30,7 +30,8 @@
 #		http://www.math.utah.edu/docs/info/gawk_toc.html
 #
 # Version history
-#		1.0	-	Compute Only Wind Average
+#	1.0	-	Compute Only Wind Average
+#	1.1	-	Wind speed Average improvemnt: Speed is computed only on valid data, to cancel the initialization time at script start (10 minutes)
 #
 
 # function definitions
@@ -41,13 +42,12 @@ function writelog(path, name, message)
 	system("echo '"name" ("strftime("%d.%m.%Y %T",systime())"): "message"' >> "path" 2>/dev/null")
 }
 
-
 # compute Wind Average
 function calcawg(speeds, dataNum)
 {
 	tot=0.00
-	for (i = 0; i < maxData; i++) {
-		tot = tot + arr_speed[i]
+	for (i = 0; i < dataNum; i++) {
+		tot = tot + speeds[i]
 	}
 
 	return (tot / dataNum)
@@ -59,13 +59,14 @@ function calcawg(speeds, dataNum)
 BEGIN {
 
 	myname = "windawg"
-	ver = "1.0"    # version
-	maxData = 120  # Maximum Number of Data Sample
-	wind_awg = 0.0 # Wind average
-	exit_code = -1 # Exit Code
-	pollsleep = 5  # Seconds of sleep between samples
+	ver = "1.0"      # version
+	maxData = 120    # Maximum Number of Data Sample
+	wind_awg = 0.0   # Wind average
+	numValidData = 0 #
+	exit_code = -1   # Exit Code
+	pollsleep = 5    # Seconds of sleep between samples
 
-	# the os command used to return wind speed 
+	# the os command used to retreive wind speed from Primary Station
 	mb_cmd = "wget -q -O - 'http://localhost/public/template.cgi?template=[wind0wind-act]&contenttype=text/plain;charset=iso-8859-1'"
 	logfile = "/tmp/log/meteobridge.log"
 	writetolog = 1
@@ -93,6 +94,8 @@ BEGIN {
 		# init the data array
 		for (i = 0; i < maxData; i++)
 			arr_speed[i] = 0.00
+			
+		numValidData = 0;	
 
 		do # main plugin infinite loop
 		{
@@ -102,12 +105,19 @@ BEGIN {
 			#insert sample in the data array
 			arr_speed[arr_idx] = mb_wspeed
 			++arr_idx
+			
+			#Icrement the number of valid data
+			if (numValidData < maxData) {
+				++numValidData
+			}
+			
 			# data array is a circular buffer
 			if (arr_idx >= maxData)
 				arr_idx = 0
 
+			
 			#compute average
-			wind_awg = calcawg(arr_speed, maxData)
+			wind_awg = calcawg(arr_speed, numValidData)
 			
 			#print the string in the format needed to be accepted by meteobridge: ' wind0 (direction) (gust) (avg speed)' all value are integer. Degree for direction, m/s*10 for speeds.
 			printf("wind0 0 %1.0f %1.0f\n", (mb_wspeed * 10), (wind_awg * 10)) #value should be scaled  * 10
