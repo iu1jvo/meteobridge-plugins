@@ -59,7 +59,7 @@ function calcawg(speeds, dataNum)
 BEGIN {
 
 	myname = "windawg"
-	ver = "1.0"      # version
+	ver = "1.1"      # version
 	maxData = 120    # Maximum Number of Data Sample
 	wind_awg = 0.0   # Wind average
 	numValidData = 0 #
