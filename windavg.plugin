@@ -82,6 +82,7 @@ BEGIN {
 
 	myname = "windawg"
 	ver = "2.0"      # version
+	maxData = 120    # Maximum Number of Data Sample
 	wind_awg = 0.0   # Wind average
 	numValidData = 0 #
 	exit_code = -1   # Exit Code
