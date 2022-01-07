@@ -30,5 +30,5 @@ MeteoBridge: https://www.meteobridge.com/wiki/index.php/Home
 	* Wind speed average in 10m.
 	* Wind direction average in 10m.
 	* wind gust in 10m.
-	
+* 2.1 Access dirtect to the primary station phisical sensor, instead logical sensor.
 
