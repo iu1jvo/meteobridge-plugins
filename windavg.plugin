@@ -33,6 +33,7 @@
 #	1.1	-	Wind speed Average improvemnt: Speed is computed only on valid data, to cancel the initialization time at script start (10 minutes)
 #	2.0 -	Add at wind speed average: Wind Gust on 10 minutes, Average of wind direction.
 #	2.1 -	Access dirtect to the primary station phisical sensor, instead logical sensor.
+#	2.2 -	Initial sleep time increased to wait start of main station listner
 #
 
 # function definitions
@@ -77,20 +78,19 @@ function calcawg(speeds, degs, dataNum)
 }
 
 
-
 # main program
 BEGIN {
-
 	myname = "windawg"
-	ver = "2.1"      # version
+	ver = "2.2"      # version
 	maxData = 120    # Maximum Number of Data Sample
 	wind_awg = 0.0   # Wind average
 	numValidData = 0 #
 	exit_code = -1   # Exit Code
 	pollsleep = 5    # Seconds of sleep between samples
+	initsleep = (6 * pollsleep)
 
 	# the os command used to retreive wind speed from Primary Station
-	mb_cmd = "wget -q -O - 'http://localhost/public/template.cgi?template=[wind0!0wind-act]%09[wind0!0dir-act]&contenttype=text/plain;charset=iso-8859-1'" #retun '0.0 0.0' (wind dir)
+	mb_cmd = "wget -q -O - 'http://localhost/public/template.cgi?template=[wind0!0wind-act]%09[wind0!0dir-act]&contenttype=text/plain;charset=iso-8859-1'" #retun '0.0\t0.0' (wind dir)
 	logfile = "/tmp/log/meteobridge.log"
 	writetolog = 1
 
@@ -101,13 +101,15 @@ BEGIN {
 		writelog(logfile,myname,"mb logger command line: '"mb_cmd"'")
 	}
 
+	
 	ssm = strftime("%S",systime()) + (strftime("%M",systime()) * 60) + (strftime("%H",systime()) * 3600) # seconds since midnight
-	if(pollsleep - ((ssm % pollsleep) > 0))
+	# initial sleep waitig main station goes Up
+	if(initsleep - ((ssm % initsleep) > 0))
 	{
 		if(writetolog)
-			writelog(logfile,myname,"inital sleep "pollsleep - (ssm % pollsleep)" seconds.")
+			writelog(logfile,myname,"inital sleep "initsleep - (ssm % initsleep)" seconds.")
 
-		exit_code = system("sleep "pollsleep - (ssm % pollsleep)" && exit 27") # initial sleep
+		exit_code = system("sleep "initsleep - (ssm % initsleep)" && exit 27") # initial sleep
 	}
 
 	if(exit_code != 0)
@@ -132,17 +134,15 @@ BEGIN {
 			arr_speed[arr_idx] = arrVar[1]
 			arr_deg[arr_idx] = arrVar[2]
 
+			# data array is a circular buffer
 			++arr_idx
-			
+			if (arr_idx >= maxData)
+				arr_idx = 0
+
 			#Icrement the number of valid data
 			if (numValidData < maxData) {
 				++numValidData
 			}
-			
-			# data array is a circular buffer
-			if (arr_idx >= maxData)
-				arr_idx = 0
-
 			
 			#compute average
 			cData_s = calcawg(arr_speed, arr_deg, numValidData)

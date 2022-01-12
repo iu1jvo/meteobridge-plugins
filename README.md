@@ -29,6 +29,8 @@ MeteoBridge: https://www.meteobridge.com/wiki/index.php/Home
 * v2.0 Compute the following:
 	* Wind speed average in 10m.
 	* Wind direction average in 10m.
-	* wind gust in 10m.
+	* Wind gust in 10m.
 * 2.1 Access dirtect to the primary station phisical sensor, instead logical sensor.
+* 2.2 -	Initial sleep time increased to wait start of main station listner
+
 
